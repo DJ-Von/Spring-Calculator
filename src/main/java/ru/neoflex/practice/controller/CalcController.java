@@ -41,4 +41,24 @@ public class CalcController {
                      @PathVariable int b){
         return a-b;
     }
+    @GetMapping("/multiple/{a}/{b}")
+    @Operation(
+            summary = "Умножение",
+            description = "Позволяет вычислить произвдение двух чисел"
+    )
+    public int multiple(@PathVariable int a,
+                     @PathVariable int b){
+        return a*b;
+    }
+    @GetMapping("/divide/{a}/{b}")
+    @Operation(
+            summary = "Деление",
+            description = "Позволяет вычислить частное двух чисел"
+    )
+    public int divide(@PathVariable int a,
+                        @PathVariable int b){
+        if(b==0)
+            return 0;
+        return a/b;
+    }
 }
