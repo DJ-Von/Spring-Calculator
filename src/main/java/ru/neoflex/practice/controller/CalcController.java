@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
                 )
         )
 )
-@Tag(name = "Калькулятор", description = "Позволяет складывать и вычитать числа")
+@Tag(name = "Калькулятор", description = "Позволяет складывать, вычитать, умножать и делить числа")
 public class CalcController {
     @GetMapping("/plus/{a}/{b}")
     @Operation(
@@ -44,7 +44,7 @@ public class CalcController {
     @GetMapping("/multiple/{a}/{b}")
     @Operation(
             summary = "Умножение",
-            description = "Позволяет вычислить произвдение двух чисел"
+            description = "Позволяет вычислить произведение двух чисел"
     )
     public int multiple(@PathVariable int a,
                      @PathVariable int b){
