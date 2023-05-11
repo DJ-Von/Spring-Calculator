@@ -5,11 +5,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.neoflex.practice.db.Calc;
+import ru.neoflex.practice.repository.CalcRep;
 
 @RestController
+@RequestMapping(value = "", produces = "application/json")
 @OpenAPIDefinition(
         info = @Info(
                 title = "Описание контроллера CalcController",
@@ -23,13 +28,16 @@ import org.springframework.web.bind.annotation.RestController;
 )
 @Tag(name = "Калькулятор", description = "Позволяет складывать, вычитать, умножать и делить числа")
 public class CalcController {
+    @Autowired
+    private CalcRep calcRep;
     @GetMapping("/plus/{a}/{b}")
     @Operation(
             summary = "Сложение",
             description = "Позволяет вычислить сумму двух чисел"
     )
-    public int plus(@PathVariable int a,
-                    @PathVariable int b){
+    public double plus(@PathVariable double a,
+                    @PathVariable double b){
+        calcRep.save(new Calc(a, b, "+", a+b));
         return a+b;
     }
     @GetMapping("/minus/{a}/{b}")
@@ -37,8 +45,9 @@ public class CalcController {
             summary = "Вычитание",
             description = "Позволяет вычислить разность двух чисел"
     )
-    public int minus(@PathVariable int a,
-                     @PathVariable int b){
+    public double minus(@PathVariable double a,
+                     @PathVariable double b){
+        calcRep.save(new Calc(a, b, "-", a-b));
         return a-b;
     }
     @GetMapping("/multiple/{a}/{b}")
@@ -46,8 +55,9 @@ public class CalcController {
             summary = "Умножение",
             description = "Позволяет вычислить произведение двух чисел"
     )
-    public int multiple(@PathVariable int a,
-                     @PathVariable int b){
+    public double multiple(@PathVariable double a,
+                     @PathVariable double b){
+        calcRep.save(new Calc(a, b, "*", a*b));
         return a*b;
     }
     @GetMapping("/divide/{a}/{b}")
@@ -55,10 +65,23 @@ public class CalcController {
             summary = "Деление",
             description = "Позволяет вычислить частное двух чисел"
     )
-    public int divide(@PathVariable int a,
-                        @PathVariable int b){
-        if(b==0)
+    public double divide(@PathVariable double a, @PathVariable double b){
+        if(b==0) {
+            calcRep.save(new Calc(a, b, "/", 0));
             return 0;
+        }
+        calcRep.save(new Calc(a, b, "/", a/b));
         return a/b;
+    }
+    @GetMapping("/get-all-calculations")
+    @Operation(
+            summary = "Вывод всех операций",
+            description = "Позволяет просмотреть все операции"
+    )
+    public String getAllCalculations(){
+        Iterable<Calc> all = calcRep.findAll();
+        StringBuilder sb = new StringBuilder();
+        all.forEach(p -> sb.append(p.getA() + p.getSign() + p.getB() + " = " + p.getResult() + "\n"));
+        return sb.toString();
     }
 }
