@@ -1,4 +1,5 @@
 # Калькулятор на Java (framework: Spring Boot)
+## На данный момент для тестирования в конфигурации application.properties нужно указать *spring.datasource.url=jdbc:h2:mem:testdb*
 Для тестирования нужно запустить проект на своём компьютере и перейти по ссылке: <a href="http://localhost:9090/swagger-ui/index.html">Калькулятор</a><br>
  - Добавлены MockMvc тесты
  - Добавлена база данных H2 (сбрасывается после завершения процесса).
